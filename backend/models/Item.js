@@ -2,6 +2,8 @@ var mongoose = require("mongoose");
 var uniqueValidator = require("mongoose-unique-validator");
 var slug = require("slug");
 var User = mongoose.model("User");
+const axiosLib = require("axios");
+
 
 var ItemSchema = new mongoose.Schema(
   {
@@ -19,9 +21,16 @@ var ItemSchema = new mongoose.Schema(
 
 ItemSchema.plugin(uniqueValidator, { message: "is already taken" });
 
-ItemSchema.pre("validate", function(next) {
+ItemSchema.pre("validate", async function(next) {
   if (!this.slug) {
     this.slugify();
+  }
+  if (this.image) {  
+    try {
+        const resp = await axiosLib.get(this.image);
+    } catch (e) {
+      this.image = "";
+    }
   }
 
   next();
