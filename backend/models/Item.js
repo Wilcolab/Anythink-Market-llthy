@@ -25,12 +25,8 @@ ItemSchema.pre("validate", async function(next) {
   if (!this.slug) {
     this.slugify();
   }
-  if (this.image) {  
-    try {
-        const resp = await axiosLib.get(this.image);
-    } catch (e) {
-      this.image = "";
-    }
+  if (!this.image) {
+    this.image = "/placeholder.png"
   }
 
   next();
